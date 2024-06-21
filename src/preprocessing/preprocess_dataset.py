@@ -31,13 +31,13 @@ def preprocess_dataset(
     ) -> str:
         default_system_prompt = "Please read the following essay and assign a score of 0,1,2,3,4,5 where 5 is the best. Output only a single number with no explanation."
         prompt = f"""### Instruction:
-        {default_system_prompt} 
+{default_system_prompt} 
 
-        ### Input:
-        {data.strip()}
+### Input:
+{data.strip()}
 
-        ### Response:
-        The score is: """.strip()
+### Response:
+The score is: """.strip()
         return prompt
 
     df["prompt"] = df[config.data_column_name].apply(generate_prompt)
