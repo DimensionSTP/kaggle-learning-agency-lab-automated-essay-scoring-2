@@ -319,7 +319,10 @@ def predict(
         sorted_logits,
     )
     pred_df[config.target_column_name] = all_predictions
-    pred_df = pred_df[[config.id_column_name, config.target_column_name]]
+    pred_df = pred_df.drop(
+        config.data_column_name,
+        axis=1,
+    )
     if not os.path.exists(f"{config.connected_dir}/submissions"):
         os.makedirs(
             f"{config.connected_dir}/submissions",
