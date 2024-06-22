@@ -68,7 +68,6 @@ class KaggleEssayScoringDataset(Dataset):
         if not self.is_causal:
             encoded = self.encode_text(
                 data=self.datas[idx],
-                data_type="data",
             )
         else:
             if self.is_preprocessed:
@@ -80,7 +79,6 @@ class KaggleEssayScoringDataset(Dataset):
                 )
             encoded = self.encode_text(
                 data=prompt,
-                data_type="data",
             )
         encoded["labels"] = torch.tensor(
             [self.labels[idx]],
@@ -162,20 +160,14 @@ class KaggleEssayScoringDataset(Dataset):
     def encode_text(
         self,
         data: str,
-        data_type: str,
     ) -> Dict[str, torch.Tensor]:
-        if data_type == "data":
-            if not self.is_causal:
+        if not self.is_causal:
+            max_length = self.data_max_length
+        else:
+            if self.split == "predict":
                 max_length = self.data_max_length
             else:
-                if self.split == "predict":
-                    max_length = self.data_max_length
-                else:
-                    max_length = self.data_max_length + self.target_max_length
-        elif data_type == "target":
-            max_length = self.target_max_length
-        else:
-            raise ValueError(f"Inavalid data_type: {data_type}")
+                max_length = self.data_max_length + self.target_max_length
         encoded = self.data_encoder(
             data,
             padding="max_length",
