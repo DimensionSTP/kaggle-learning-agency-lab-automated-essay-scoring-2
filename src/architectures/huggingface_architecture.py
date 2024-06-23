@@ -26,9 +26,6 @@ class HuggingFaceArchitecture(LightningModule):
         period: int,
         eta_min: float,
         interval: str,
-        options: Dict[str, Any],
-        target_max_length: int,
-        target_column_name: str,
     ) -> None:
         super().__init__()
         self.model = model
@@ -51,9 +48,6 @@ class HuggingFaceArchitecture(LightningModule):
         self.period = period
         self.eta_min = eta_min
         self.interval = interval
-        self.options = options
-        self.target_max_length = target_max_length
-        self.target_column_name = target_column_name
 
         metrics = MetricCollection(
             [
