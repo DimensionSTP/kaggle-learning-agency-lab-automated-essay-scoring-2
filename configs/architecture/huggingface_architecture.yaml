@@ -36,6 +36,3 @@ lr: ${lr}
 period: ${period}
 eta_min: ${eta_min}
 interval: step
-options: ${options}
-target_max_length: ${target_max_length}
-target_column_name: ${target_column_name}
