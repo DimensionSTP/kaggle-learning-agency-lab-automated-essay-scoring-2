@@ -1,17 +1,17 @@
 #!/bin/bash
 
 is_causal=True
-is_preprocessed=True
+is_preprocessed=False
 is_tuned="untuned"
 strategy="deepspeed_stage_3_offload"
 upload_user="meta-llama"
 model_type="Meta-Llama-3-8B-Instruct"
-quantization_type="quantization"
-peft_type="lora"
+quantization_type="origin"
+peft_type="origin"
 data_max_length=598
 target_max_length=2
 precision="bf16"
-batch_size=24
+batch_size=128
 
 python main.py mode=train \
     is_causal=$is_causal \
