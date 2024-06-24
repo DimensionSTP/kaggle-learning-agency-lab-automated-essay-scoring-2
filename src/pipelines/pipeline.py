@@ -304,11 +304,11 @@ def predict(
         f"{config.connected_dir}/data/{config.submission_file_name}.csv"
     )
     sorted_logits = sorted_logits_with_indices[: len(pred_df), :-1].numpy()
-    scaled_ll_predictions = np.argmax(
+    scaled_all_predictions = np.argmax(
         sorted_logits,
         axis=-1,
     )
-    all_predictions = scaled_ll_predictions + 1
+    all_predictions = scaled_all_predictions + 1
     if not os.path.exists(f"{config.connected_dir}/logits"):
         os.makedirs(
             f"{config.connected_dir}/logits",
