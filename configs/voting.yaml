@@ -10,7 +10,8 @@ voted_name: soft_voting
 
 voted_logit: ${connected_dir}/logits/${voted_name}.npy
 submission_file: ${connected_dir}/data/test.csv
-target_column_name: target
+data_column_name: full_text
+target_column_name: score
 voted_file: ${connected_dir}/submissions/${voted_name}.csv
 
 votings:
