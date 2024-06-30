@@ -23,6 +23,7 @@ python main.py mode=train \
     model_type=$model_type \
     quantization_type=$quantization_type \
     peft_type=$peft_type \
+    loss_type=$loss_type \
     data_max_length=$data_max_length \
     target_max_length=$target_max_length \
     precision=$precision \
