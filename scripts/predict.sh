@@ -8,6 +8,7 @@ upload_user="meta-llama"
 model_type="Meta-Llama-3-8B-Instruct"
 quantization_type="origin"
 peft_type="origin"
+loss_type="ordinal_log_loss"
 data_max_length=598
 target_max_length=2
 precision="bf16"
