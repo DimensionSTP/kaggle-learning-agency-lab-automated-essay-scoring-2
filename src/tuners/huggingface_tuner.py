@@ -126,6 +126,7 @@ class HuggingFaceTuner:
             pretrained_model_name=params["pretrained_model_name"],
             is_preprocessed=self.module_params.is_preprocessed,
             custom_data_encoder_path=self.module_params.custom_data_encoder_path,
+            loss_type=self.module_params.loss_type,
             num_labels=self.module_params.num_labels,
             strategy=self.module_params.strategy,
             lr=params["lr"],
