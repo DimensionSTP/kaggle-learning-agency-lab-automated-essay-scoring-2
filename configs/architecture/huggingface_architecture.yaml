@@ -30,6 +30,7 @@ model:
 pretrained_model_name: ${pretrained_model_name}
 is_preprocessed: ${is_preprocessed}
 custom_data_encoder_path: ${custom_data_encoder_path}
+loss_type: ${loss_type}
 num_labels: ${num_labels}
 strategy: ${strategy}
 lr: ${lr}
