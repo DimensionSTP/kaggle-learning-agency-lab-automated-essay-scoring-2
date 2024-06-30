@@ -10,6 +10,7 @@ from deepspeed.ops.adam import FusedAdam, DeepSpeedCPUAdam
 
 from transformers import AutoTokenizer
 
+from .losses.ordinal_log_loss import OrdinalLogLoss
 from .losses.ordinal_cross_entropy_loss import OrdinalCrossEntropyLoss
 
 
@@ -20,6 +21,7 @@ class HuggingFaceArchitecture(LightningModule):
         pretrained_model_name: str,
         is_preprocessed: bool,
         custom_data_encoder_path: str,
+        loss_type: str,
         num_labels: int,
         strategy: str,
         lr: float,
@@ -29,7 +31,6 @@ class HuggingFaceArchitecture(LightningModule):
     ) -> None:
         super().__init__()
         self.model = model
-        self.criterion = OrdinalCrossEntropyLoss()
         self.pretrained_model_name = pretrained_model_name
         if is_preprocessed:
             data_encoder_path = (
@@ -43,6 +44,12 @@ class HuggingFaceArchitecture(LightningModule):
         )
         if self.data_encoder.pad_token_id is None:
             self.data_encoder.pad_token_id = self.data_encoder.eos_token_id
+        if loss_type == "ordinal_log_loss":
+            self.criterion = OrdinalLogLoss()
+        elif loss_type == "ordinal_cross_entropy":
+            self.criterion = OrdinalCrossEntropyLoss()
+        else:
+            self.criterion = None
         self.strategy = strategy
         self.lr = lr
         self.period = period
@@ -92,10 +99,13 @@ class HuggingFaceArchitecture(LightningModule):
             logit,
             dim=-1,
         )
-        loss = self.criterion(
-            logit=logit,
-            label=label,
-        )
+        if self.criterion:
+            loss = self.criterion(
+                logit=logit,
+                label=label,
+            )
+        else:
+            loss = output.loss
         return {
             "loss": loss,
             "logit": logit,
