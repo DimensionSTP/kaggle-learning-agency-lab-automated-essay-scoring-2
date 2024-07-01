@@ -12,7 +12,7 @@ class OrdinalLogLoss(nn.Module):
         logit: torch.Tensor,
         label: torch.Tensor,
     ) -> torch.Tensor:
-        num_labels = logit.size(1)
+        num_labels = logit.size(-1)
         dtype = logit.dtype
         device = logit.device
 
