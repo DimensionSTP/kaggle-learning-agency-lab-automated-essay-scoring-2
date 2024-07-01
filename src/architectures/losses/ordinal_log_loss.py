@@ -13,30 +13,44 @@ class OrdinalLogLoss(nn.Module):
         label: torch.Tensor,
     ) -> torch.Tensor:
         num_labels = logit.size(1)
+        dtype = logit.dtype
         device = logit.device
-        probas = F.softmax(
+
+        prob = F.softmax(
             logit,
-            dim=1,
+            dim=-1,
         )
+        epsilon = 1e-7
+        prob = torch.clamp(
+            prob,
+            epsilon,
+            1 - epsilon,
+        )
+
         one_hot_label = (
             F.one_hot(
                 label,
                 num_classes=num_labels,
             )
-            .float()
+            .to(dtype)
             .to(device)
         )
-
-        distance_matrix = self.create_distance_matrix(num_labels).to(device)
-        distances = torch.matmul(
+        distance_matrix = (
+            self.create_distance_matrix(
+                num_labels=num_labels,
+            )
+            .to(dtype)
+            .to(device)
+        )
+        distance = torch.matmul(
             one_hot_label,
             distance_matrix,
         )
 
-        err = -torch.log(1 - probas) * distances.abs() ** 2
+        error = -torch.log(1 - prob) * distance.abs() ** 2
         loss = torch.sum(
-            err,
-            dim=1,
+            error,
+            dim=-1,
         ).mean()
         return loss
 
@@ -47,5 +61,5 @@ class OrdinalLogLoss(nn.Module):
         distance_matrix = torch.abs(
             torch.arange(num_labels).unsqueeze(0)
             - torch.arange(num_labels).unsqueeze(1)
-        ).float()
+        )
         return distance_matrix
