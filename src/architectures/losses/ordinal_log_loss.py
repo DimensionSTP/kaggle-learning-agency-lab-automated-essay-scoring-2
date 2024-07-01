@@ -16,6 +16,13 @@ class OrdinalLogLoss(nn.Module):
         dtype = logit.dtype
         device = logit.device
 
+        max_logit = torch.max(
+            logit,
+            dim=-1,
+            keepdim=True,
+        ).values
+        logit = logit - max_logit
+
         prob = F.softmax(
             logit,
             dim=-1,
