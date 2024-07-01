@@ -11,8 +11,10 @@ from deepspeed.ops.adam import FusedAdam, DeepSpeedCPUAdam
 from transformers import AutoTokenizer
 
 from .losses.coral_loss import CoralLoss
-from .losses.ordinal_log_loss import OrdinalLogLoss
 from .losses.ordinal_cross_entropy_loss import OrdinalCrossEntropyLoss
+from .losses.ordinal_log_loss import OrdinalLogLoss
+from .losses.weighted_cross_entropy_loss import WeightedCrossEntropyLoss
+from .losses.weighted_ordinal_cross_entropy_loss import WeightedOrdinalCrossEntropyLoss
 
 
 class HuggingFaceArchitecture(LightningModule):
@@ -47,12 +49,18 @@ class HuggingFaceArchitecture(LightningModule):
             self.data_encoder.pad_token_id = self.data_encoder.eos_token_id
         if loss_type == "coral":
             self.criterion = CoralLoss()
-        elif loss_type == "ordinal_log_loss":
-            self.criterion = OrdinalLogLoss()
         elif loss_type == "ordinal_cross_entropy":
             self.criterion = OrdinalCrossEntropyLoss()
-        else:
+        elif loss_type == "ordinal_log":
+            self.criterion = OrdinalLogLoss()
+        elif loss_type == "weighted_cross_entropy":
+            self.criterion = WeightedCrossEntropyLoss()
+        elif loss_type == "weighted_ordinal_cross_entropy":
+            self.criterion = WeightedOrdinalCrossEntropyLoss()
+        elif loss_type == "origin":
             self.criterion = None
+        else:
+            raise ValueError(f"Invalid loss type: {loss_type}")
         self.strategy = strategy
         self.lr = lr
         self.period = period
