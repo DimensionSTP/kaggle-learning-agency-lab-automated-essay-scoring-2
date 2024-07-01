@@ -10,6 +10,7 @@ from deepspeed.ops.adam import FusedAdam, DeepSpeedCPUAdam
 
 from transformers import AutoTokenizer
 
+from .losses.coral_loss import CoralLoss
 from .losses.ordinal_log_loss import OrdinalLogLoss
 from .losses.ordinal_cross_entropy_loss import OrdinalCrossEntropyLoss
 
@@ -44,7 +45,9 @@ class HuggingFaceArchitecture(LightningModule):
         )
         if self.data_encoder.pad_token_id is None:
             self.data_encoder.pad_token_id = self.data_encoder.eos_token_id
-        if loss_type == "ordinal_log_loss":
+        if loss_type == "coral":
+            self.criterion = CoralLoss()
+        elif loss_type == "ordinal_log_loss":
             self.criterion = OrdinalLogLoss()
         elif loss_type == "ordinal_cross_entropy":
             self.criterion = OrdinalCrossEntropyLoss()
