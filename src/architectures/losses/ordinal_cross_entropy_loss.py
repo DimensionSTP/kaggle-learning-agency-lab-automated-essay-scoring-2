@@ -13,18 +13,24 @@ class OrdinalCrossEntropyLoss(nn.Module):
         label: torch.Tensor,
     ) -> torch.Tensor:
         batch_size = logit.size(0)
-        num_labels = logit.size(1)
-        label = label.view(-1, 1)
+        num_labels = logit.size(-1)
+        dtype = logit.dtype
+        device = logit.device
+
+        label = label.view(
+            -1,
+            1,
+        )
         target_matrix = (
             torch.arange(num_labels)
             .expand(
                 batch_size,
                 num_labels,
             )
-            .to(logit.device)
+            .to(device)
         )
 
-        mask = (target_matrix >= label).float()
+        mask = (target_matrix >= label).to(dtype)
 
         log_sigmoid_logit = F.logsigmoid(logit)
         negative_log_sigmoid_logit = F.logsigmoid(-logit)
