@@ -27,7 +27,7 @@ class OrdinalLogLoss(nn.Module):
             logit,
             dim=-1,
         )
-        epsilon = 1e-7
+        epsilon = 1e-10
         prob = torch.clamp(
             prob,
             epsilon,
@@ -54,8 +54,8 @@ class OrdinalLogLoss(nn.Module):
             distance_matrix,
         )
 
-        error = -torch.log(1 - prob) * distance.abs() ** 2
-        loss = torch.sum(
+        error = -torch.log(1 - prob) * distance.abs() ** 1.5
+        loss = torch.mean(
             error,
             dim=-1,
         ).mean()
