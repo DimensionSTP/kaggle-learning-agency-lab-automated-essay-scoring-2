@@ -30,6 +30,7 @@ def merge_tokenizer(
         token = sp.id_to_piece(idx)
         if token not in tokenizer.get_vocab():
             new_tokens.append(token)
+
     tokenizer.add_tokens(new_tokens)
 
     if not os.path.exists(
