@@ -33,7 +33,8 @@ target_column_name: score
 upload_user: meta-llama
 model_type: Meta-Llama-3-8B-Instruct
 pretrained_model_name: ${upload_user}/${model_type}
-custom_data_encoder_path: ${connected_dir}/data/merged_tokenizer
+custom_data_encoder_path: ${connected_dir}/data/merged_tokenizer/${pretrained_model_name}
+left_padding: False
 merged_model_path: ${connected_dir}/data/merged_model/${pretrained_model_name}
 data_max_length: 598
 target_max_length: 2
