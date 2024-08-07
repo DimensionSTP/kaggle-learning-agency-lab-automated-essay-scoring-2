@@ -16,6 +16,7 @@ target_max_length=2
 precision="bf16"
 batch_size=128
 epoch=10
+model_detail="Llama-3-8B-Instruct"
 
 python $path/upload_to_hf_hub.py \
     is_causal=$is_causal \
@@ -32,4 +33,5 @@ python $path/upload_to_hf_hub.py \
     target_max_length=$target_max_length \
     precision=$precision \
     batch_size=$batch_size \
-    epoch=$epoch
+    epoch=$epoch \
+    model_detail=$model_detail
