@@ -97,6 +97,7 @@ logit_name: ${save_detail}-epoch=${epoch}
 submission_name: ${save_detail}-epoch=${epoch}
 
 user_name: ${oc.env:USER_NAME}
+model_detail: Llama-3-8B-Instruct
 upload_tag: essay-scoring
 num_safetensors: 10
 
