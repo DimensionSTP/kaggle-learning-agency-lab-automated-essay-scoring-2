@@ -56,10 +56,10 @@ peft_config:
   inference_mode: False
 
 loss_type: origin
-lr: 0.00001
-weight_decay: 0.01
-warmup_rate: 0.05
-eta_min_rate: 0.01
+lr: 1e-5
+weight_decay: 1e-2
+warmup_ratio: 5e-2
+eta_min_ratio: 1e-2
 
 monitor: val_MulticlassCohenKappa
 tracking_direction: max
