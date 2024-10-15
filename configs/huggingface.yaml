@@ -56,10 +56,10 @@ peft_config:
   inference_mode: False
 
 loss_type: origin
-lr: 1e-5
-weight_decay: 1e-2
+lr: 3e-6
+weight_decay: 1e-1
 warmup_ratio: 5e-2
-eta_min_ratio: 1e-2
+eta_min_ratio: 1e-3
 
 monitor: val_MulticlassCohenKappa
 tracking_direction: max
@@ -74,7 +74,7 @@ precision: bf16
 accumulate_grad_batches: 1
 gradient_clip_val: 1
 gradient_clip_algorithm: norm
-epoch: 5
+epoch: 4
 
 model_name: HuggingFace
 dataset_name: KaggleEssayScoring
