@@ -193,17 +193,17 @@ class KaggleEssayScoringDataset(Dataset):
 {default_system_prompt} 
 
 ### Input:
-{data.strip()}
+{data}
 
 ### Response:
-The score is: """.strip()
+The score is: """
         else:
             prompt = f"""### Instruction:
 {default_system_prompt} 
 
 ### Input:
-{data.strip()}
+{data}
 
 ### Response:
-The score is: {label} """.strip()
+The score is: {label} """
         return prompt
