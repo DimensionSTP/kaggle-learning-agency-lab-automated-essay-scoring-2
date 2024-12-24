@@ -6,7 +6,6 @@ from torch import nn
 
 from transformers import (
     BitsAndBytesConfig,
-    PreTrainedModel,
     AutoModelForSequenceClassification,
     AutoTokenizer,
 )
@@ -105,7 +104,7 @@ class HuggingFaceModel(nn.Module):
         output = self.model(**encoded)
         return output
 
-    def get_model(self) -> PreTrainedModel:
+    def get_model(self) -> AutoModelForSequenceClassification:
         model = AutoModelForSequenceClassification.from_pretrained(
             self.model_path,
             output_hidden_states=False,
