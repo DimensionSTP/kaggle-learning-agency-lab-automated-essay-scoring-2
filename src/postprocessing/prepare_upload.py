@@ -5,19 +5,26 @@ dotenv.load_dotenv(
 )
 
 import os
+import warnings
+
+os.environ["HYDRA_FULL_ERROR"] = "1"
+os.environ["HF_HOME"] = os.environ.get("HF_HOME")
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+warnings.filterwarnings("ignore")
+
 import re
 import json
 
 import torch
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, AutoConfig
 
 from safetensors.torch import save_file
 
 from tqdm import tqdm
 
 import hydra
-from omegaconf import DictConfig
+from omegaconf import OmegaConf, DictConfig
 
 
 @hydra.main(
@@ -27,12 +34,28 @@ from omegaconf import DictConfig
 def prepare_upload(
     config: DictConfig,
 ) -> None:
-    save_dir = f"{config.connected_dir}/prepare_upload/{config.model_detail}/epoch={config.epoch}"
-    if not os.path.exists(save_dir):
-        os.makedirs(
-            save_dir,
-            exist_ok=True,
+    if config.is_tuned == "tuned":
+        params = json.load(
+            open(
+                config.tuned_hparams_path,
+                "rt",
+                encoding="UTF-8",
+            )
         )
+        config = OmegaConf.merge(
+            config,
+            params,
+        )
+    elif config.is_tuned == "untuned":
+        pass
+    else:
+        raise ValueError(f"Invalid is_tuned argument: {config.is_tuned}")
+
+    save_dir = f"{config.connected_dir}/prepare_upload/{config.model_detail}/{config.upload_tag}/epoch={config.epoch}"
+    os.makedirs(
+        save_dir,
+        exist_ok=True,
+    )
 
     if config.strategy.startswith("deepspeed"):
         checkpoint = torch.load(f"{config.ckpt_path}/model.pt")
@@ -47,7 +70,7 @@ def prepare_upload(
                 r"model.\2",
                 k,
             )
-            if k.startswith("model.lm_head"):
+            if k.startswith("model.score"):
                 k = k.replace(
                     "model.",
                     "",
@@ -84,7 +107,7 @@ def prepare_upload(
     model_config.vocab_size = len(tokenizer)
     model_config.save_pretrained(save_dir)
 
-    original_model = AutoModelForCausalLM.from_pretrained(model_path)
+    original_model = AutoModelForSequenceClassification.from_pretrained(model_path)
     original_model.resize_token_embeddings(len(tokenizer))
     original_model.load_state_dict(model_state_dict)
     state_dict = original_model.state_dict()
